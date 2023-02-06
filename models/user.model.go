@@ -1,13 +1,19 @@
 package models
 
-import "github.com/google/uuid"
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
 
 type User struct {
-	ID       uuid.UUID `gorm:"type:uuid; default:uuid_generate_v4(); primary_key"`
-	Name     string    `gorm:"type: varchar(255); not null"`
-	Email    string    `gorm:"uniqueIndex; not null"`
-	Password string    `gorm:"not null"`
-	Photo    string    `gorm:"not null"`
+	ID        uuid.UUID `gorm:"type:uuid; default:uuid_generate_v4(); primary_key"`
+	Name      string    `gorm:"type: varchar(255); not null"`
+	Email     string    `gorm:"uniqueIndex; not null"`
+	Password  string    `gorm:"not null"`
+	Photo     string    `gorm:"not null"`
+	CreatedAt time.Time `gorm:"not null"`
+	UpdatedAt time.Time `gorm:"not null"`
 }
 
 type SignUpInput struct {
@@ -24,7 +30,10 @@ type SignInInput struct {
 }
 
 type UserResponse struct {
-	ID    uuid.UUID `json:"id,omitempty"`
-	Name  string    `json:"name"`
-	Photo string    `json:"photo,omitempty"`
+	ID        uuid.UUID `json:"id,omitempty"`
+	Name      string    `json:"name"`
+	Email     string    `json:"email,omitempty"`
+	Photo     string    `json:"photo,omitempty"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
