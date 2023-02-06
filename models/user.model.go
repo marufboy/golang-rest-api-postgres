@@ -37,3 +37,8 @@ type UserResponse struct {
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
 }
+
+type UpdateUser struct {
+	Name  string `json:"name,omitempty"`
+	Photo string `json:"photo,omitempty"`
+}
