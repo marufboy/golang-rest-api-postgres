@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 	"time"
@@ -114,5 +115,49 @@ func (ac *AuthController) SignInUser(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": accessToken})
 }
 
-//TODO: 3. RefreshAccessToken user
-//TODO: 4. Logout user
+// TODO: 3. RefreshAccessToken user
+func (ac *AuthController) RefreshAccessToken(ctx *gin.Context) {
+	message := "could not refresh access token"
+
+	refreshToken, err := ctx.Cookie("refresh_token")
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": message})
+		return
+	}
+
+	setup, _ := config.LoadConfig(".")
+
+	sub, err := uToken.ValidateToken(refreshToken, setup.RefreshTokenPublicKey)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": err.Error()})
+		return
+	}
+
+	var user models.User
+	result := ac.DB.First(&user, "id = ?", fmt.Sprint(sub))
+
+	if result.Error != nil {
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": "the token belonging this user doesnt exists"})
+		return
+	}
+
+	accessToken, err := uToken.CreateToken(setup.AccessTokenExpiresIn, user.ID, setup.AccessTokenPrivateKey)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": err.Error()})
+	}
+
+	ctx.SetCookie("access_token", accessToken, setup.AccessTokenMaxAge*60, "/", "localhost", false, true)
+	ctx.SetCookie("logged_in", "true", setup.AccessTokenMaxAge*60, "/", "localhost", false, false)
+
+	ctx.JSON(http.StatusOK, gin.H{"status": "success", "access_token": accessToken})
+}
+
+// TODO: 4. Logout user
+func (ac *AuthController) LogoutUser(ctx *gin.Context) {
+	ctx.SetCookie("access_token", "", -1, "/", "localhost", false, true)
+	ctx.SetCookie("refresh_token", "", -1, "/", "localhost", false, true)
+	ctx.SetCookie("logged_in", "", -1, "/", "localhost", false, false)
+
+	ctx.JSON(http.StatusOK, gin.H{"status": "success", "message": "logout succesfully"})
+}
