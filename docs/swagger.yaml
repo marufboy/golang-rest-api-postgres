@@ -1,0 +1,15 @@
+basePath: /api
+host: localhost:8000
+info:
+  contact:
+    email: afif23ixa@gmail.com
+    name: Muhammad Afif Ma'ruf
+    url: http://www.swagger.io/support
+  description: A User Auth Service API in Go using Gin framework
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  title: Gin User Auth Service
+  version: "1.0"
+paths: {}
+swagger: "2.0"

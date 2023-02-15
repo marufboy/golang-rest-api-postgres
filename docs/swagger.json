@@ -1,0 +1,20 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "A User Auth Service API in Go using Gin framework",
+        "title": "Gin User Auth Service",
+        "contact": {
+            "name": "Muhammad Afif Ma'ruf",
+            "url": "http://www.swagger.io/support",
+            "email": "afif23ixa@gmail.com"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        },
+        "version": "1.0"
+    },
+    "host": "localhost:8000",
+    "basePath": "/api",
+    "paths": {}
+}
